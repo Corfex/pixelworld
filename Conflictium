@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conflictium</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #game-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        #game-map {
+            display: grid;
+            grid-template-columns: repeat(30, 20px);
+            gap: 1px;
+            margin: 20px auto;
+        }
+
+        .cell {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <h1>Welcome to Conflictium!</h1>
+    <p>Collaborate in real-time to create a unique masterpiece.</p>
+
+    <div id="game-map"></div>
+
+    <label for="color-input">Choose Color:</label>
+    <input type="color" id="color-input" class="color-input">
+    <button onclick="changeColor()">Change Color</button>
+
+    <script>
+        const boardSize = 30;
+        const gameMap = document.getElementById("game-map");
+        const colorInput = document.getElementById("color-input");
+
+        // Initialize game board
+        for (let i = 0; i < boardSize * boardSize; i++) {
+            const cell = document.createElement("div");
+            cell.className = "cell";
+            cell.addEventListener("click", () => changeColor(cell));
+            gameMap.appendChild(cell);
+        }
+
+        let remainingTime = 60;
+        let cooldownTime = 0;
+
+        function changeColor(cell) {
+            const color = colorInput.value;
+
+            if (remainingTime > 0 && cooldownTime === 0) {
+                cell.style.backgroundColor = color;
+                remainingTime -= 10;
+            } else if (cooldownTime > 0) {
+                alert("Cooldown time! Please wait for the next cycle.");
+            } else {
+                alert("No remaining time! Please wait for the next cycle.");
+            }
+        }
+
+        setInterval(() => {
+            if (remainingTime <= 0) {
+                alert("Remaining Time: " + remainingTime + " seconds. Cooldown started.");
+                cooldownTime = 10;
+                remainingTime = 60;
+
+                setTimeout(() => {
+                    cooldownTime = 0;
+                    alert("Cooldown ended. You can now change colors.");
+                }, cooldownTime * 1000);
+            }
+        }, 1000);
+    </script>
+</div>
+
+</body>
+</html>
